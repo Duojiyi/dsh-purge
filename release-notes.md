@@ -1,3 +1,17 @@
+# 1.1.74
+
+## 中文
+
+- 修「应用结果 64 / 68」：启动自愈（后台 auto-apply）和手动点「应用」写的是同一批宿主文件，之前没有互斥，两路交叉写会让最后落盘的那一份把已打好的补丁盖回原文。现在 apply / revert 走同一条进程内串行闸门，后到的一次总能看到前一次写完的内容。
+- 补丁写盘后回读校验：刚写进去的内容若被另一路用旧文本盖回去，立即补写一次，不再留到下次「应用」。
+- 版本 **1.1.74**。
+
+## English
+
+- Fixes "applied 64 / 68": the boot self-heal (background auto-apply) and a manual Apply write the same host files, and without mutual exclusion the later write could restore the pre-patch text over patches that had just landed. Apply and revert now share one in-process serial gate, so the later run always sees the earlier run's output.
+- Patched files are re-read after writing: if another writer restored the old text in between, the patch is written again immediately instead of waiting for the next Apply.
+- Version **1.1.74**.
+
 # 1.1.73
 
 ## 中文

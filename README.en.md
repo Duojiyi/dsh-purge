@@ -4,7 +4,7 @@
 
 <h1 align="center">⚔️ DeepSeek Harness cybersecurity red-team tool (dsh-purge)</h1>
 
-<p align="center"><strong>Version 1.1.73</strong></p>
+<p align="center"><strong>Version 1.1.74</strong></p>
 
 <p align="center">
   <em>DeepSeek Harness jailbreak: every model, swap prompts per model. Default prompt for 小码酱. Please star ⭐ If you build on this, see Attribution required.</em>
@@ -173,7 +173,7 @@ The latest plugin supports **dsh 0.2** only — do not apply it to 0.1.x.
 
 ### What dsh 0.2.1-rc.2 changed
 
-Since 1.1.73 the plugin targets **0.2.1-rc.2** (and still matches the 0.2.0 sources):
+Since 1.1.74 the plugin targets **0.2.1-rc.2** (and still matches the 0.2.0 sources):
 
 - `{{cwd}}` is no longer a host-registered prompt variable (0.2.1 registers only `provider` and `model`; the working directory arrives as the `working-directory:current` context). The plugin renders the suffix from the real path and rewrites any leftover placeholder, so a custom prompt keeping `{{cwd}}` no longer fails the whole assembly.
 - The patch that replaces the whole `system-prompt/assemble` body (#40) follows the new template: 0.2.1 adds a `requiredContexts` line after the early return and filters `contexts` by it.
@@ -216,7 +216,7 @@ Hub one-click on [dsh-plugin.org](https://dsh-plugin.org/plugins/yujunzhixue/dsh
 For the desktop client you can also click the button (`dsh://` deep link):
 
 <p align="center">
-  <a href="dsh://plugin/install?id=dsh-purge&name=dsh-purge&version=1.1.73&repo=Duojiyi%2Fdsh-purge&permissions=%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%B3%A8%E5%85%A5%2C%E6%9C%AC%E6%9C%BA%E8%A1%A5%E4%B8%81%2C%E8%AE%BE%E7%BD%AE%E9%A1%B5&downloadUrl=https%3A%2F%2Fgithub.com%2FDuojiyi%2Fdsh-purge%2Farchive%2Frefs%2Fheads%2Fmaster.tar.gz"><strong>Install in desktop client</strong></a>
+  <a href="dsh://plugin/install?id=dsh-purge&name=dsh-purge&version=1.1.74&repo=Duojiyi%2Fdsh-purge&permissions=%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%B3%A8%E5%85%A5%2C%E6%9C%AC%E6%9C%BA%E8%A1%A5%E4%B8%81%2C%E8%AE%BE%E7%BD%AE%E9%A1%B5&downloadUrl=https%3A%2F%2Fgithub.com%2FDuojiyi%2Fdsh-purge%2Farchive%2Frefs%2Fheads%2Fmaster.tar.gz"><strong>Install in desktop client</strong></a>
 </p>
 
 ### After the command: three steps
