@@ -33,7 +33,9 @@
 >
 > 本仓库现由现任维护者接手，继续维护：版本照常发布，issue / PR 正常处理，新版 dsh 也会持续跟进适配。已经发布的版本可以继续用，仓库保持可用、保持更新。维护进展会写在这篇 README 开头。
 >
-> 若它对你有帮助，欢迎看看下面的 [赞助](#sponsor)；也在征集 README [广告位](#ad)。
+> 若它对你有帮助，欢迎看看下面的 [赞助](#sponsor)。
+>
+> 维护者：[GitHub @Duojiyi](https://github.com/Duojiyi)。
 
 > **官方 Web 和官方桌面端都支持。** 官方 `dsh web` 用 profile `web`；官方桌面 EXE（DeepSeek Harness **0.2.1-rc.2**）用 profile `desktop`。两边分开安装、分开点「应用」。当前版本只适配 dsh 0.2；更早的 dsh 用对应的老版本插件。社区桌面端不维护。
 >
@@ -44,7 +46,6 @@
 ## 目录
 
 - [赞助](#sponsor)
-- [广告位](#ad)
 - [介绍](#介绍)
 - [署名要求](#署名要求)
 - [违规商用公示](#违规商用公示)
@@ -72,22 +73,6 @@
 | Solana      | `6x16GhRgLVpKFFXaU1seKNdx2rypspSJTL4dbpt6Xpwk` |
 | Ethereum    | `0xB68BD60C0e8c519513B7DF9bB147696815423B3E`   |
 | Bitcoin     | `bc1qu70yxkrtwnymt8ryluz9x8y8hqzune5340npht`   |
-
----
-
-<a id="ad"></a>
-
-## 广告位
-
-README 长期有人看，现开放少量展示位。收入用于贴补业余维护。
-
-| 位置 | 状态 |
-| --- | --- |
-| 本页赞助区上方（文字链 + 一句介绍，或一张小图） | **空缺，可定** |
-
-名额少，谈妥再上。不接灰产、盗版、冒充本仓库、纯引流盘。
-
-合作请发邮件 [a2269198325@163.com](mailto:a2269198325@163.com)，或 GitHub [@YuJunZhiXue](https://github.com/YuJunZhiXue) 私信。标题注明「dsh-purge 广告位」。
 
 ---
 
@@ -247,7 +232,7 @@ Web 的控件只动 Web，桌面端的只动桌面应用。不要在一个宿主
 
 - 会话标题旁有 **dsh-purge**，点开后在「清洗」里能点「应用」。
 - 聊天里 `/purge status` 能打出 `DSH_HOME` 和补丁列表，路径应是你正在用的那一份。
-- 没装的可选包（例如梁神）显示跳过，不挡住应用完成。
+- 没装的可选包显示跳过，不挡住应用完成。
 
 ### 交给助手安装
 
@@ -625,7 +610,7 @@ flowchart LR
 
 - 改动范围是本机 `@deepseek-ai/*` 包里的渲染文案、默认策略和执行逻辑，以及用户目录下的覆盖文件与规则集。
 - 升级后原文对不上会显示跳过，这次应用仍算完成，不会乱改。
-- 不改动非 `@deepseek-ai` 的第三方插件源仓库（启动时的 CMD 无感会**尽力**修补已装的 doctor / market / 梁神 / mnemon，属运行时补丁）。
+- 不改动非 `@deepseek-ai` 的第三方插件源仓库（启动时的 CMD 无感会**尽力**修补已装的 doctor / market / mnemon，属运行时补丁）。
 - 安装走 npm 包名 `dsh-purge`：`dsh plugin --profile web add dsh-purge` 或 `dsh plugin --profile desktop add dsh-purge`。当前目录已是本仓库时 `add .`。registry 上不去再加 master.tar.gz。插件市场一键安装走同一个 npm 包。
 
 ---

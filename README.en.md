@@ -33,7 +33,9 @@
 >
 > This repository now has a current maintainer and stays in active development: releases keep shipping, issues / PRs are triaged, and newer dsh versions are tracked. What is already published stays usable, and the repo stays alive and updated. Maintenance notes will be posted at the top of this README.
 >
-> If it helped you, the [sponsor](#sponsor) addresses are below. README [ad slots](#ad) are also open, to help keep the lights on.
+> If it helped you, the [sponsor](#sponsor) addresses are below.
+>
+> Maintainer: [@Duojiyi](https://github.com/Duojiyi) on GitHub.
 
 > **Official Web and the official desktop app are both supported.** Official `dsh web` uses profile `web`. The official desktop EXE (DeepSeek Harness **0.2.1-rc.2**) uses profile `desktop`. Install and Apply them separately. This release targets dsh 0.2 only. Older dsh builds need the matching older plugin. Community Desktop is not maintained.
 >
@@ -44,7 +46,6 @@
 ## Contents
 
 - [Sponsor](#sponsor)
-- [Ad slots](#ad)
 - [What this is](#what-this-is)
 - [Attribution required](#attribution-required)
 - [Unauthorized commercial use](#unauthorized-commercial-use)
@@ -71,22 +72,6 @@ If this project helps you, send it over — I'm out here asking~
 | Solana | `6x16GhRgLVpKFFXaU1seKNdx2rypspSJTL4dbpt6Xpwk` |
 | Ethereum | `0xB68BD60C0e8c519513B7DF9bB147696815423B3E` |
 | Bitcoin | `bc1qu70yxkrtwnymt8ryluz9x8y8hqzune5340npht` |
-
----
-
-<a id="ad"></a>
-
-## Ad slots
-
-This README gets steady traffic. A few placements are open; proceeds go toward after-hours upkeep.
-
-| Placement | Status |
-| --- | --- |
-| Above the sponsor block (text link + one-line blurb, or a small image) | **Open** |
-
-Slots are limited and go live after we agree. No gray-market, piracy, impersonation of this repo, or pure traffic-farm listings.
-
-For placement, email [a2269198325@163.com](mailto:a2269198325@163.com) or message [@YuJunZhiXue](https://github.com/YuJunZhiXue) on GitHub. Put `dsh-purge ad slot` in the subject.
 
 ---
 
@@ -248,7 +233,7 @@ Web controls affect Web only; desktop controls affect the desktop app only. Do n
 
 - **dsh-purge** sits beside the session title, with **Apply** on its Clean page.
 - `/purge status` in chat prints `DSH_HOME` and the patch list — the path should be the home you actually run.
-- Optional packages that are not installed (liangshen) show as skipped and do not block Apply.
+- Optional packages that are not installed show as skipped and do not block Apply.
 
 ### Hand this to an assistant
 
@@ -617,7 +602,7 @@ What changed, and the zip, are on [Releases](https://github.com/Duojiyi/dsh-purg
 
 - Scope is rendered copy, defaults, and runtime logic inside local `@deepseek-ai/*` packages, plus override files and rule sets under the harness home.
 - After an upgrade, unmatched originals show as skipped. Apply still completes, and those files are left unchanged.
-- Third-party plugin *source repos* outside `@deepseek-ai` are left alone (CMD silence may **best-effort** patch installed doctor / market / liangshen / mnemon at runtime).
+- Third-party plugin *source repos* outside `@deepseek-ai` are left alone (CMD silence may **best-effort** patch installed doctor / market / mnemon at runtime).
 - Install the npm package `dsh-purge`: `dsh plugin --profile web add dsh-purge` or `dsh plugin --profile desktop add dsh-purge`. From this repo, `add .`. If the registry is blocked, add the master.tar.gz URL instead. Hub one-click uses the same npm package.
 
 ---
