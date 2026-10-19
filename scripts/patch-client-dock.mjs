@@ -433,15 +433,27 @@ const newApply = `		function apply(ctx) {
 			}
 		}`;
 
+// 1.1.72 起 apply() 里已经没有 settings.section 版（1.1.71 的老文本），oldApply 是历史兜底。
+// 现在只认两种状态：dock 已经打过（幂等跳过），或者 shell.overlay 版 apply 还在但没打 dock。
+// 认不出来就明确报错，别拿「找不到旧文本」这种话误导下一个维护者。
 if (client.includes('id: "dsh-purge-dock"')) {
 	// already patched apply
 } else if (client.includes(oldApply)) {
 	client = client.replace(oldApply, newApply);
+} else if (client.includes('ctx.slots.inject("shell.overlay"')) {
+	// shell.overlay 版 apply 已在，但 dock 块没插进去 → 由下面的 dockBlock 插入补上
 } else {
-	throw new Error("apply() block not found for replacement");
+	throw new Error(
+		"apply() 布局已变：client.js 里既没有 dsh-purge-dock，也没有 shell.overlay 版 apply。"
+		+ "对照 client.js 里 installRewindUi / apply 当前文本重写 dockBlock，或回滚 client.js 到已打好的版本。",
+	);
 }
 
-writeFileSync(clientPath, client);
+// 仓库里的 client.js 是 CRLF；早先的脚本把整文件 normalize 成 LF 写回，
+// 结果每次执行都产生 8k+ 行纯换行 diff。写回前把换行还原成原文件的形态。
+const originalHadCrlf = readFileSync(clientPath, "utf8").includes("\r\n");
+const outText = originalHadCrlf ? client.replace(/\r\n/g, "\n").replace(/\n/g, "\r\n") : client;
+writeFileSync(clientPath, outText);
 console.log("patched dock/auth into client.js");
 
 const built = spawnSync(process.execPath, [join(root, "scripts", "build-client.mjs")], {

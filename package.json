@@ -1,6 +1,6 @@
 {
   "name": "dsh-purge",
-  "version": "1.1.72",
+  "version": "1.1.73",
   "description": "DeepSeek Harness 破甲：让所有模型都能破甲，不同模型可换不同提示词；默认提示词面向国模「小码酱」。Jailbreak for every model — swap prompts per model. 求 Star 收藏 ⭐ 如要二开，请查看署名要求部分",
   "type": "module",
   "main": "lib/index.js",
@@ -36,7 +36,9 @@
   ],
   "scripts": {
     "embed-prompt": "node scripts/embed-default-prompt.mjs",
-    "build:client": "node scripts/build-client.mjs"
+    "build:client": "node scripts/build-client.mjs",
+    "test": "node --test test/identity.test.mjs test/preset.test.mjs test/patch-contract.test.mjs",
+    "verify:host": "node scripts/verify-host.mjs"
   },
   "license": "MIT",
   "keywords": [
@@ -56,11 +58,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YuJunZhiXue/dsh-purge.git"
+    "url": "git+https://github.com/Duojiyi/dsh-purge.git"
   },
-  "homepage": "https://github.com/YuJunZhiXue/dsh-purge#readme",
+  "homepage": "https://github.com/Duojiyi/dsh-purge#readme",
   "bugs": {
-    "url": "https://github.com/YuJunZhiXue/dsh-purge/issues"
+    "url": "https://github.com/Duojiyi/dsh-purge/issues"
   },
   "dsh": {
     "bundle": {
@@ -69,18 +71,18 @@
     "client": {
       "platform": "web",
       "inject": [
-        "@deepseek-ai/dsh-client-connection",
-        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-renderer",
         "@deepseek-ai/dsh-client-locale",
-        "@deepseek-ai/dsh-client-ui-slots",
-        "@deepseek-ai/dsh-client-ui-settings"
+        "@deepseek-ai/dsh-client-ui-session",
+        "@deepseek-ai/dsh-client-ui-workspace",
+        "@deepseek-ai/dsh-client-ui-conversation"
       ]
     },
     "install": {
       "preferred": "tarball",
-      "tarball": "https://github.com/YuJunZhiXue/dsh-purge/archive/refs/heads/master.tar.gz",
-      "zip": "https://github.com/YuJunZhiXue/dsh-purge/archive/refs/heads/master.zip",
-      "git": "https://github.com/YuJunZhiXue/dsh-purge.git"
+      "tarball": "https://github.com/Duojiyi/dsh-purge/archive/refs/heads/master.tar.gz",
+      "zip": "https://github.com/Duojiyi/dsh-purge/archive/refs/heads/master.zip",
+      "git": "https://github.com/Duojiyi/dsh-purge.git"
     }
   },
   "publishConfig": {
@@ -92,5 +94,5 @@
   "engines": {
     "node": ">=18"
   },
-  "dshTarget": "0.2.0-rc.2"
+  "dshTarget": "0.2.1-rc.2"
 }

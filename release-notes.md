@@ -1,3 +1,39 @@
+# 1.1.73
+
+## 中文
+
+- 版本 **1.1.73**，适配对象升到 **dsh 0.2.1-rc.2**（官方 Web / 官方桌面同一档）。
+- `{{cwd}}` 不再是宿主注册的插值变量（0.2.1 只注册 `provider`、`model`，工作目录改由 `working-directory:current` 上下文下发）。留在会被插值的段落里会直接抛 `unknown prompt variable`，整轮运行失败：
+  - `cordis.patch.yml` 不再写 `personaSuffix: Your working directory is {{cwd}}.`；
+  - 工作目录后缀改由运行时用真实路径拼（`cwdSuffixText()`），宿主已经下发 cwd 上下文时不重复写；
+  - 装配出口统一过 `fillCwdPlaceholders()`，任何残留 `{{cwd}}` 都会被替换掉；
+  - 新增 `lib/prompt-variables.js`：把 `cwd` 变量按当前会话目录注册回去，用户自己写的提示词里留 `{{cwd}}` 也不会崩。
+- **#40** 适配 0.2.1 的新 `assemble()`：early-return 之后多了 `requiredContexts`，`contexts` 也从 `[]` 改成按 required 过滤。旧模板整段替换会丢 required 上下文，本版新增 `COMPLETE_PROMPT_WATERFALL_INJECT_021` 单独保留这两处。
+- **#32 / #53** 目标文件迁到 `dsh-harness-dev-context`，并补 0.2.1 的新身份句（`...whose URL the runtime context names.` / `Current DeepSeek Harness Web GUI URL: ...`）；旧 `dsh-web-app/lib` 路径保留兼容 0.2.0。
+- **#71** 标为可选（0.2.1 不再随包梁神预设）；**#77** 锚点跟上 `append()` 里的 `if (this.revised.size > 0)` 守卫，旧形态仍保留。
+- 补丁状态：可选补丁锚点缺失时记 `na` 而不是 `skipped`，不再把「这台宿主没有这份文件」当失败。
+- **网页端**：`dsh.client.inject` 里两个已不存在的包（`dsh-client-runtime`、`dsh-client-ui-slots`）换成 0.2.1 的 `dsh-client-ui-renderer` / `dsh-client-ui-session` / `dsh-client-ui-workspace` / `dsh-client-ui-conversation`，右侧 dsh-purge 面板才能正常挂载。
+- **红队预设**：0.2.1 的 `dsh-tool-subagent` 见到 `toolFilter`（或 `persona`）会直接抛错、整份预设 `registered-broken`。随包预设去掉 `toolFilter`，叶子约束由 `maxDepth: 1` 承担；已有用户预设在启动时自动摘掉这个键。
+- 新增自检：`npm test`（装配不残留 `{{cwd}}`、预设无 `toolFilter`、可选 `DSH_VERIFY_AI_BASE` 的宿主契约测试）与 `node scripts/verify-host.mjs <aiBase>`（对未清洗宿主逐条判定锚点是否漂移）。
+- `package.json` 的仓库地址、安装地址改到维护仓库 `Duojiyi/dsh-purge`。
+
+## English
+
+- **1.1.73** targets **dsh 0.2.1-rc.2** (official web and official desktop).
+- `{{cwd}}` is no longer a host-registered prompt variable (0.2.1 registers only `provider` and `model`; the working directory arrives as the `working-directory:current` context). Leaving it in an interpolated section throws `unknown prompt variable` and kills the turn:
+  - `cordis.patch.yml` no longer sets `personaSuffix: Your working directory is {{cwd}}.`;
+  - the suffix is rendered from the real path at runtime (`cwdSuffixText()`), and skipped when the host already sends the cwd context;
+  - every assembly passes through `fillCwdPlaceholders()`;
+  - new `lib/prompt-variables.js` re-registers `cwd` from the current session directory, so user prompts keeping `{{cwd}}` still work.
+- **#40** adapts the 0.2.1 `assemble()`: a `requiredContexts` line was added after the early return and `contexts` now filters by it. New `COMPLETE_PROMPT_WATERFALL_INJECT_021` keeps both.
+- **#32 / #53** retarget `dsh-harness-dev-context` and cover the new identity strings, keeping `dsh-web-app/lib` for 0.2.0.
+- **#71** is optional now; **#77** follows the `if (this.revised.size > 0)` guard in `append()`, keeping the old shape.
+- Patch status reports `na` instead of `skipped` for optional patches whose anchor is absent.
+- **Web client**: the two no-longer-existing packages in `dsh.client.inject` (`dsh-client-runtime`, `dsh-client-ui-slots`) are replaced by `dsh-client-ui-renderer` / `dsh-client-ui-session` / `dsh-client-ui-workspace` / `dsh-client-ui-conversation`, so the dock panel mounts again.
+- **Red-team preset**: 0.2.1 `dsh-tool-subagent` throws on `toolFilter` (or `persona`) and the preset reports `registered-broken`. The bundled preset drops `toolFilter` (leaf behaviour rests on `maxDepth: 1`), and existing user presets are healed at boot.
+- New self-checks: `npm test` (no leftover `{{cwd}}`, no `toolFilter` in the preset, optional host-contract test via `DSH_VERIFY_AI_BASE`) and `node scripts/verify-host.mjs <aiBase>`.
+- Repo and install URLs point at the maintenance fork `Duojiyi/dsh-purge`.
+
 # 1.1.71
 
 ## 中文

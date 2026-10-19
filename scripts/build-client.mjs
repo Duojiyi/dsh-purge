@@ -2,73 +2,51 @@
  * 把 lib/redteam/client.js 抽成可嵌入的工厂片段，
  * 写进 client.js 里的 DSH_PURGE_DRILL 标记之间。
  *
- * 用法：node scripts/build-client.mjs
+ * 用法：
+ *   node scripts/build-client.mjs              # 正常重建
+ *   DSH_PURGE_ALLOW_CLIENT_DRIFT=1 node ...     # 明确接受把产物回退到源码版本
+ *
+ * 重建会**整段覆盖** client.js 里的演练台区间。如果仓库里的产物比 lib/redteam/client.js 新
+ * （有人在产物上直接改过），直接重建就会静默丢掉那些改动，所以默认先比一次漂移。
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
+import { BEGIN, END, buildDrillFragment } from "./drill-fragment.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const drillSrc = join(root, "lib", "redteam", "client.js");
 const clientPath = join(root, "client.js");
 
-const BEGIN = "/* __DSH_PURGE_DRILL_BEGIN__ */";
-const END = "/* __DSH_PURGE_DRILL_END__ */";
-
-let raw = readFileSync(drillSrc, "utf8").replace(/\r\n/g, "\n");
-const startMark = "factory: (require) => {";
-const start = raw.indexOf(startMark);
-if (start < 0) throw new Error("cannot find ModuleLoader factory in drill client");
-const endMark = "\n    return module.exports\n  },\n})";
-const end = raw.lastIndexOf(endMark);
-if (end < 0) throw new Error("cannot find factory end in drill client");
-let body = raw.slice(start + startMark.length, end);
-
-// 去掉末尾 exports（return 已在 endMark 外）
-body = body
-	.replace(/\n\s*exports\.apply\s*=\s*apply\s*\n/, "\n")
-	.replace(/\n\s*exports\.inject\s*=\s*inject\s*\n/, "\n");
-
-// 替换 apply(ctx)：不再自己注册槽位，只导出 Panel / CSS / 状态
-const applyAt = body.lastIndexOf("function apply(ctx) {");
-if (applyAt < 0) throw new Error("apply(ctx) not found in drill client");
-// apply() 本体没有嵌套函数花括号冲突到 CSS（CSS 在前面），用括号深度即可
-let d = 0;
-let j = body.indexOf("{", applyAt);
-for (; j < body.length; j += 1) {
-	const ch = body[j];
-	if (ch === "{") d += 1;
-	else if (ch === "}") {
-		d -= 1;
-		if (d === 0) {
-			j += 1;
-			break;
-		}
+if (process.env.DSH_PURGE_ALLOW_CLIENT_DRIFT !== "1") {
+	const drift = spawnSync(process.execPath, [join(root, "scripts", "check-client-drift.mjs")], {
+		cwd: root,
+		encoding: "utf8",
+	});
+	const out = `${drift.stdout || ""}${drift.stderr || ""}`;
+	if (out.includes("drifted")) {
+		process.stdout.write(out);
+		console.error(
+			"\n重建已中止：产物里的演练台比源码新，重建会把这些改动丢掉。\n"
+			+ "处理办法：把 client.js 标记区间里的改动反抽回 lib/redteam/client.js 后再跑；\n"
+			+ "确认要放弃产物改动时，用 DSH_PURGE_ALLOW_CLIENT_DRIFT=1 重跑。",
+		);
+		process.exit(1);
 	}
 }
-const applyParts = `function applyDrillParts() {
-      return { CSS: CSS, Panel: Panel, setUI: setUI, useUI: useUI, isFullWindow: isFullWindow, setDockWidth: setDockWidth };
-    }
-`;
-body = body.slice(0, applyAt) + applyParts + body.slice(j);
 
-const fragment = `${BEGIN}
-		// 内嵌演练台（源码在 lib/redteam，已并进本插件）
-		const __dshPurgeDrill = (() => {
-			var module = { exports: {} };
-			var exports = module.exports;
-${body}
-			return applyDrillParts();
-		})();
-${END}`;
+const fragment = buildDrillFragment();
 
 let client = readFileSync(clientPath, "utf8");
 if (!client.includes(BEGIN) || !client.includes(END)) {
 	throw new Error("client.js missing drill markers; run patch-client-dock.mjs first");
 }
+// client.js 在仓库里是 CRLF；用原文件的换行形态写回，避免整文件 diff。
+const hadCrlf = client.includes("\r\n");
 const beginAt = client.indexOf(BEGIN);
 const endAt = client.indexOf(END);
 if (beginAt < 0 || endAt < 0 || endAt < beginAt) throw new Error("drill markers out of order");
 client = client.slice(0, beginAt) + fragment + client.slice(endAt + END.length);
+if (hadCrlf) client = client.replace(/\r\n/g, "\n").replace(/\n/g, "\r\n");
 writeFileSync(clientPath, client);
 console.log("embedded drill client into client.js (" + Buffer.byteLength(fragment) + " bytes fragment)");
